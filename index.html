@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vikki, My Love</title>
+    <link rel="stylesheet" href="style.css"/>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background-color: #FFFAA0; /* Lighter pastel yellow */
+            overflow: hidden; /* Hide scrollbars */
+        }
+        
+        .wrapper {
+            text-align: center;
+            margin-top: 100px;
+        }
+        .gif {
+            width: 300px;
+            height: auto;
+        }
+        .btn-group {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Space between buttons */
+        }
+        .yes-btn, .no-btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            background-color: black;
+            color: white;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            z-index: 1;
+        }
+        .yes-btn:hover, .no-btn:hover {
+            background-color: #444;
+            transform: scale(1.1);
+        }
+
+        .no-btn {
+            position: relative;
+        }
+        
+        /* New styles for falling hearts */
+        .falling-hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Allows clicks to pass through */
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: 10; /* Above other content */
+        }
+
+        .heart {
+            position: absolute;
+            color: red;
+            font-size: 24px;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h2 class="question">Vikki, may I have the honor of treating you<br>to our ramen date this Friday?</h2>
+        <img class="gif" alt="gif" src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2NoMmNwbnk0c2ZmeGljd3ZzNHU1cmlvYmltNmgwc2NpMzM2YmszciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9TFPrA5ZpWQROm3K0v/giphy.gif" />
+        <div class="btn-group">
+            <button class="yes-btn">Yes, if you want to</button>
+            <button class="no-btn">No, let me treat you</button>
+        </div>
+    </div>
+
+    <!-- Falling hearts container -->
+    <div class="falling-hearts"></div>
+
+    <script>
+        // Function to randomly move the 'No' button
+        function moveButton(button) {
+            const yesBtnRect = yesBtn.getBoundingClientRect();
+            let x, y;
+            do {
+                x = Math.random() * (window.innerWidth - button.offsetWidth);
+                y = Math.random() * (window.innerHeight - button.offsetHeight);
+            } while (
+                x < yesBtnRect.right && x + button.offsetWidth > yesBtnRect.left &&
+                y < yesBtnRect.bottom && y + button.offsetHeight > yesBtnRect.top
+            );
+            button.style.position = 'absolute';
+            button.style.left = x + 'px';
+            button.style.top = y + 'px';
+        }
+
+        // Select the "No" and "Yes" buttons
+        const noBtn = document.querySelector('.no-btn');
+        const yesBtn = document.querySelector('.yes-btn');
+        const question = document.querySelector('.question');
+        const gif = document.querySelector('.gif');
+        const fallingHeartsContainer = document.querySelector('.falling-hearts');
+
+        // Function to create a falling heart
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.textContent = '❤️';
+            heart.classList.add('heart');
+            heart.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's'; // Random speed
+            fallingHeartsContainer.appendChild(heart);
+
+            // Remove the heart after animation
+            setTimeout(() => {
+                heart.remove();
+            }, 5000); // 5 seconds to match animation duration
+        }
+
+        // Function to start falling hearts
+        function startFallingHearts() {
+            setInterval(createHeart, 300); // Create hearts every 300ms
+        }
+
+        // Move the "No" button when hovered, clicked, or touched (for mobile)
+        noBtn.addEventListener('mouseenter', () => {
+            moveButton(noBtn);
+        });
+        noBtn.addEventListener('click', () => {
+            moveButton(noBtn);
+        });
+        noBtn.addEventListener('touchstart', () => {
+            moveButton(noBtn);
+        });
+
+        // Change the message, GIF, and start hearts when "Yes" button is clicked
+        yesBtn.addEventListener('click', () => {
+           question.innerHTML = "Of course, for you, I’d love to take care of everything ❤️<br>See you this Friday, my love!";
+            gif.src = 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHl5b2hzcnA5MGtzbzc4eGZqMHM0dWxxb2w3a25rdTlwZnVmdzlqdyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/MDJ9IbxxvDUQM/giphy.gif'; // Cute cats loving GIF
+            startFallingHearts(); // Start the falling hearts effect
+        });
+    </script>
+</body>
+</html>
